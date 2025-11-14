@@ -1,48 +1,34 @@
 """
-Configuration file for real-time face recognition system.
+Global configuration values for the face recognition project.
 
-This file contains all configurable parameters including:
-- Model selection (detector and embedder)
-- Similarity threshold for matching
-- Frame processing interval for performance
+All paths are absolute to avoid ambiguity when scripts are launched from any
+working directory. Update these values to match deployment requirements.
 """
 
-# Face Detection Model
-# Options: "retinaface" (preferred), "mtcnn"
-DETECTOR = "retinaface"
+from pathlib import Path
 
-# Face Recognition Model
-# Options: "Facenet512" (preferred), "ArcFace", "VGG-Face"
-MODEL_NAME = "Facenet512"
+PROJECT_ROOT = Path(__file__).resolve().parent
 
-# Similarity Threshold
-# Cosine similarity threshold for face matching
-# Values closer to 1.0 = stricter matching (fewer false positives)
-# Values closer to 0.0 = more lenient matching (more false positives)
-THRESHOLD = 0.45
+# Directories
+DATASET_DIR = PROJECT_ROOT / "dataset"
+EMBEDDINGS_DIR = PROJECT_ROOT / "embeddings"
+EMBEDDINGS_PATH = EMBEDDINGS_DIR / "embeddings.pkl"
 
-# Frame Processing Interval
-# Process every Nth frame to balance speed and accuracy
-# 1 = process every frame (slower but most accurate)
-# 2 = process every other frame (faster, good balance)
-FRAME_INTERVAL = 2
+# Model settings
+# `buffalo_l` bundles RetinaFace for detection and ArcFace for embeddings.
+INSIGHTFACE_MODEL_NAME = "buffalo_l"
+DETECTION_SIZE = (640, 640)  # RetinaFace input resolution
 
-# Paths
-DATASET_DIR = "dataset"
-EMBEDDINGS_FILE = "embeddings.pkl"
+# Matching behaviour
+SIMILARITY_THRESHOLD = 0.45  # Cosine similarity threshold for a positive match
+FRAME_INTERVAL = 3  # Process every Nth frame to balance speed and accuracy
+MIN_FACE_SCORE = 0.4  # Ignore detections below this confidence score
 
-# Display Settings
-WINDOW_NAME = "Real-Time Face Recognition"
-FONT_SCALE = 0.7
-FONT_THICKNESS = 2
-BOX_THICKNESS = 2
-
-# Colors (BGR format for OpenCV)
-COLOR_KNOWN = (0, 255, 0)  # Green for recognized faces
-COLOR_UNKNOWN = (0, 0, 255)  # Red for unknown faces
-COLOR_TEXT = (255, 255, 255)  # White text
-
-# Camera/Stream Settings
+# Streaming and retry behaviour
 RTSP_RETRY_ATTEMPTS = 5
-RTSP_RETRY_DELAY = 5  # seconds
+RTSP_RETRY_DELAY_SECONDS = 5
+
+# Display behaviour
+WINDOW_NAME = "Face Recognition Debug"
+
 
